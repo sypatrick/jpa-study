@@ -1,16 +1,26 @@
 package jpabasic;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
+/**
+ * @Entity 가 붙은 클래스는 JPA가 관리 -> JPA를 사용해서 테이블과 매핑할 클래스는 필수
+ *  1. 기본 생성자 필수
+ *  2. final, enum, interface, inner 클래스 사용 못함.
+ *  3. 저장할 필드에 final 사용하면 안됨.
+ */
 @Entity
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @Column(name = "name", nullable = false)
+    private String userName;
+
 }
