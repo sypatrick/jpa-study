@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
+
 /**
  * 생성
  *  - EntityManager.persist() : 영속성 컨텍스트에 저장
@@ -55,21 +57,33 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUserName("memberA");
-            //member.setTeamId(team.getId());  이 부분이 객체지향스럽지가 못함. getTeamId 해야하지 않을까?
             member.setTeam(team); // 객체지향 모델링
             em.persist(member);
+            Member findMember = em.find(Member.class, member.getId());
             /**
-             *  직접 쿼리를 보고 싶다면 flush로 싱크를 맞춰주고 (db에 쿼리날림)
-             *  1차 캐시 지워주고 밑에 다시 실행. (쿼리를 안보여주는 이유는 영속성 컨텍스트에서 나왔던 1차캐시에서 가져오기 때문)
-             *  em.flush();
-             *  em.clear();
+             * 양방향 연관관계
+             * mappedBy 가 중요.
+             * 객체와 테이블이 관계를 맺는 차이
+             * 1. 객체는 단방향 연관관계가 2개 (참조가 Member, Team에 각각 있음)
+             * 2. 테이블은 양방향 연관관계 1개 (FK 하나로 Member, Team 연관관계가 끝)
+             *
+             * 연관관계의 주인은 mappedBy 사용할 수 없고 등록이나 수정 할 수 없다. 조회만 가능.
+             * FK가 있는 곳을 주인으로 설정하는 것이 좋다.
+             * 만약 Team을 주인으로 정해서 수정을 하게 되면 Member 테이블로 쿼리가 날라간다.
+             * 복잡해지면 정말 헷갈리게 된다.
+             *
+             * 결국은 순수 객체 상태를 고려해서 항상 양쪽에 값을 설정해야함.
+             * flush(), clear()하지 않은 상태라면 List에 add하지 않는다면 1차캐시에 값이 없음. JPA가 읽어들일 수 없다.
+             *
+             * 단방향 매핑만으로도 이미 매핑관계를 완료.
+             * 단방향 매핑을 잘 하고 양방향은 필요할 때 추가해도 된다.(테이블에 영향을 주지 않기 때문)
+             * 양방향 매핑은 반대 방향으로 조회 기능이 추가된 것 뿐.
              */
-            Member findMember = em.find(Member.class, member.getId()); // 조회시도 마찬가지로 데이터를 계속 조회해야 함.
+            List<Member> members = findMember.getTeam().getMembers();
 
-            //Long findTeamId = findMember.getTeamId();
-            //Team findTeam = em.find(Team.class, findTeamId);
-            Team findTeam = findMember.getTeam(); // 객체지향 모델링
-            System.out.println("findTeam = " + findTeam);
+            for (Member m : members) {
+                System.out.println("m.getUserName() = " + m.getUserName());
+            }
 
             tx.commit();
 
