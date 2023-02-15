@@ -1,9 +1,10 @@
 package jpabasic;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @Entity 가 붙은 클래스는 JPA가 관리 -> JPA를 사용해서 테이블과 매핑할 클래스는 필수
@@ -21,7 +22,13 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
     private String userName;
-    @Column(name = "team_id")
-    private Long teamId;
 
+//    @Column(name = "team_id")
+//    private Long teamId;
+    /**
+     * 밑의 어노테이션을 붙여주면 연관관계 매핑, 객체지향 모델링이다.
+     */
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 }
