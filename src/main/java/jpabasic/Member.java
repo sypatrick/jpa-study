@@ -17,10 +17,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name = "member_id")
     private Long id;
-
-    @Column(name = "name", nullable = false)
     private String userName;
+    @Column(name = "team_id")
+    private Long teamId;
 
 }

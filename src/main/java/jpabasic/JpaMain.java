@@ -41,14 +41,14 @@ public class JpaMain {
          *  em.remove()
          */
         try{
+            Team team = new Team();
+            team.setName("A");
+            em.persist(team);
+
             Member member = new Member();
-            member.setUserName("B");
-
-            System.out.println("=========");
+            member.setUserName("memberA");
+            member.setTeamId(team.getId()); // 이 부분이 객체지향스럽지가 못함. getTeamId 해야하지 않을까?
             em.persist(member);
-            System.out.println("=========");
-            System.out.println("member_Id() = " + member.getId());
-
             tx.commit();
 
         } catch (Exception e){
