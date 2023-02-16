@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Locker {
     @Id @GeneratedValue
-    @Column(name = "locker_id")
+    @Column(name = "LOCKER_ID")
     private Long id;
     private String name;
     @OneToOne(mappedBy = "locker")

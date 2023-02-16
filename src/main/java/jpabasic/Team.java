@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class Team {
     @Id @GeneratedValue
-    @Column(name = "team_id")
+    @Column(name = "TEAM_ID")
     private Long id;
     private String name;
 }

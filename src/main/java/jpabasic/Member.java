@@ -29,10 +29,10 @@ public class Member {
      * 밑의 어노테이션을 붙여주면 연관관계 매핑, 객체지향 모델링이다.
      */
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "TEAM_ID")
     private Team team;
 
     @OneToOne
-    @JoinColumn(name = "locker_id")
+    @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
 }

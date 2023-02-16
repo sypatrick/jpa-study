@@ -1,5 +1,7 @@
 package jpabasic;
 
+import jpabasic.inheritanceMapping.Movie;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -30,6 +32,11 @@ import javax.persistence.Persistence;
  *
  *  삭제
  *  em.remove()
+ *
+ *  직접 쿼리를 보고 싶다면 flush로 싱크를 맞춰주고 (db에 쿼리날림)
+ *  1차 캐시 지워주고 밑에 다시 실행. (쿼리를 안보여주는 이유는 영속성 컨텍스트에서 나왔던 1차캐시에서 가져오기 때문)
+ *  em.flush();
+ *  em.clear();
  */
 public class JpaMain {
     public static void main(String[] arg){
@@ -49,27 +56,19 @@ public class JpaMain {
          *  즉, 객체를 테이블에 맞추어 데이터 중심으로 모델링 하면, 협력관계를 만들 수 없다.
          */
         try{
-            Team team = new Team();
-            team.setName("A");
-            em.persist(team);
+            Movie movie = new Movie();
+            movie.setDirector("a");
+            movie.setActor("b");
+            movie.setName("반지의 제왕");
+            movie.setPrice(40000);
 
-            Member member = new Member();
-            member.setUserName("memberA");
-            //member.setTeamId(team.getId());  이 부분이 객체지향스럽지가 못함. getTeamId 해야하지 않을까?
-            member.setTeam(team); // 객체지향 모델링
-            em.persist(member);
-            /**
-             *  직접 쿼리를 보고 싶다면 flush로 싱크를 맞춰주고 (db에 쿼리날림)
-             *  1차 캐시 지워주고 밑에 다시 실행. (쿼리를 안보여주는 이유는 영속성 컨텍스트에서 나왔던 1차캐시에서 가져오기 때문)
-             *  em.flush();
-             *  em.clear();
-             */
-            Member findMember = em.find(Member.class, member.getId()); // 조회시도 마찬가지로 데이터를 계속 조회해야 함.
+            em.persist(movie);
 
-            //Long findTeamId = findMember.getTeamId();
-            //Team findTeam = em.find(Team.class, findTeamId);
-            Team findTeam = findMember.getTeam(); // 객체지향 모델링
-            System.out.println("findTeam = " + findTeam);
+            em.flush();
+            em.clear();
+
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("movie = " + findMovie);
 
             tx.commit();
 
