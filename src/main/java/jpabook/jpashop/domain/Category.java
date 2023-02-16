@@ -17,14 +17,14 @@ public class Category {
     @Column(name = "CATEGORY_ID")
     private Long id;
     private String name;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "parent")
+//    private Category parent;
+//
+//    @OneToMany(mappedBy = "PARENT_ID")
+//    private List<Category> child = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "parent")
-    private Category parent;
-
-    @OneToMany(mappedBy = "PARENT_ID")
-    private List<Category> child = new ArrayList<>();
-
-    @OneToMany(mappedBy = "item")
-    private List<Item> items = new ArrayList<>();
+    @OneToMany(mappedBy = "category")
+    private List<CategoryItem> items = new ArrayList<>();
 }
